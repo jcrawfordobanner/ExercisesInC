@@ -1,15 +1,19 @@
 #include <stdio.h>
 
-int add(int x, int y) {
-  return x+y;
-}
+/*
+The strings used in the code are defined at the top of the object code
+
+The intergers were defined in movl
+
+addition is defined using addl
+
+The optimization of replaces the multiple functions with the
+output of the functions in order to make the code run faster.
+*/
 
 int main() {
-    printf("Hello, World!\n");
-    add(2,4);
-    int a = 3;
-    int b = 4;
-    int c = a + b;
-    printf("c is %d\n", c);
+    int x=5;
+    int y =x+1;
+    printf("%i",y);
     return 0;
 }
