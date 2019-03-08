@@ -33,6 +33,15 @@ returns: new array, caller must free
 */
 // TODO: Write this function
 
+double* get_int_part(double* pop, int p) {
+    double iptr;
+    double *loki = malloc(sizeof(double)*p);
+    for(int i = 0; i <p;i++){
+      loki[i]=pop[i]-modf(pop[i],&iptr);
+    }
+    return loki;
+}
+
 void test_get_int_part()
 {
     double array[] = {1.2, 2.718, 3.1412, 5.6};
@@ -59,6 +68,19 @@ returns: new array, caller must free
 //TODO: Write this function
 
 
+
+double* get_both_parts(double* pop,int length, double** p) {
+    double iptr;
+    double *loki = malloc(sizeof(double)*length);
+    double *poki = malloc(sizeof(double)*length);
+    for(int i = 0; i <length;i++){
+      poki[i]=modf(pop[i],&iptr);
+      loki[i]=iptr;
+    }
+    *p=poki;
+    return loki;
+}
+
 void test_get_both_parts()
 {
     double array[] = {1.2, 2.718, 3.14159, 5.6};
@@ -66,7 +88,6 @@ void test_get_both_parts()
     double expected_frac[] = {0.2, 0.718, 0.14159, 0.6};
     double *frac_part;
     int length = sizeof(array) / sizeof(double);
-
     double *int_part = get_both_parts(array, length, &frac_part);
 
     for (int i=0; i<length; i++) {

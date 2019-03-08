@@ -23,7 +23,7 @@ char *strfilter2(char *string, char *letters) {
     char *dest = buffer;
     char c;
 
-    while (c = *string++) {
+    while ((c = *string++)) {
         char *ptr = strchr(letters, c);
         if (ptr) {
             *dest++ = c;
@@ -37,7 +37,7 @@ char *strfilter2(char *string, char *letters) {
 
 char *strfilter3(char *string, char *letters) {
     int length = strlen(string);
-    char buffer[length];
+    char buffer[length+1];
     int j = 0;
 
     for (int i=0; i<length; i++) {
@@ -46,22 +46,24 @@ char *strfilter3(char *string, char *letters) {
             buffer[j++] = string[i];
         }
     }
-    return buffer;
+    char *pop=buffer;
+    return pop;
 }
 
 char *strfilter4(char *string, char *letters) {
-    char buffer[100];
+    char buffer[strlen(string)+1];//buffer is bigger than necessary
     char c;
 
-    while (c = *string++) {
+    while ((c = *string++)) {
         char *ptr = strchr(letters, c);
+        char letter[]={c,'\0'};
         if (ptr) {
-            strcat(buffer, c);
+            strcat(buffer, letter);//concatenating the strings wouldnt work
         }
     }
-    int length = sizeof(buffer);
-    char *res = (char *) malloc (length * sizeof(char));
-    strcpy(buffer, res);
+    int length = strlen(buffer);//buffer is the
+    char *res = (char *) malloc (length+1 * sizeof(char));
+    strcpy(buffer, res);//unnecessary when you could just edit buffer
     return res;
 }
 
