@@ -135,7 +135,7 @@ int main() {
     head->next->next = make_node(3, NULL);
     head->next->next->next = make_node(4, NULL);
 
-    Node **list;
+    Node **list = &head;
     print_list(list);
 
     int retval = pop(list);
