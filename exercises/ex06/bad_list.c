@@ -78,7 +78,4 @@ int main() {
 
     retval = pop(list);
     print_list(list);
-
-    retval = pop(list);
-    print_list(list);
 }

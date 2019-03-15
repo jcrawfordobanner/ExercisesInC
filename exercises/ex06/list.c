@@ -54,8 +54,18 @@ void print_list(Node **list) {
 * returns: int or -1 if the list is empty
 */
 int pop(Node **list) {
-    // FILL THIS IN!
-    return 0;
+  int poppy;
+  Node *head = *list;
+  if(head==NULL){
+    return -1;
+  }
+
+  Node *newHead = head->next;
+  poppy = head->val;
+  free(head);
+  *list = newHead;
+
+  return poppy;// FILL THIS IN!
 }
 
 
@@ -66,6 +76,8 @@ int pop(Node **list) {
 */
 void push(Node **list, int val) {
     // FILL THIS IN!
+    Node *newHead = make_node(val,*list);
+    *list = newHead;
 }
 
 
@@ -80,7 +92,19 @@ void push(Node **list, int val) {
 */
 int remove_by_value(Node **list, int val) {
     // FILL THIS IN!
-    return 0;
+    int count = 0;
+    Node *prev;
+    Node *head =*list;
+    while(head->val!=val){
+      if(head->next == NULL){
+        return 0;
+      }
+      prev = head;
+      head=head->next;
+    }
+    prev->next=head->next;
+    free(head);
+    return 1;
 }
 
 
@@ -92,6 +116,16 @@ int remove_by_value(Node **list, int val) {
 */
 void reverse(Node **list) {
     // FILL THIS IN!
+    Node *head = *list;
+    Node *temp;
+    Node *prev = NULL;
+    while(head!=NULL){
+      temp=head->next;
+      head->next=prev;
+      prev = head;
+      head=temp;
+    }
+  *list = prev;
 }
 
 
@@ -101,7 +135,7 @@ int main() {
     head->next->next = make_node(3, NULL);
     head->next->next->next = make_node(4, NULL);
 
-    Node **list = &head;
+    Node **list;
     print_list(list);
 
     int retval = pop(list);
