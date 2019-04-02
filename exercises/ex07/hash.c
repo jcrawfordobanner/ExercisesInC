@@ -179,6 +179,11 @@ int hash_hashable(Hashable *hashable)
 int equal_int (void *ip, void *jp)
 {
     // FILL THIS IN!
+    int*fir=(int*)ip;
+    int*sec=(int*)jp;
+    if(&fir==&sec){
+      return 1;
+    }
     return 0;
 }
 
@@ -193,6 +198,11 @@ int equal_int (void *ip, void *jp)
 int equal_string (void *s1, void *s2)
 {
     // FILL THIS IN!
+    char*fir=(char*)s1;
+    char*sec=(char*)s2;
+    if(!strcmp(fir,sec)){
+      return 1;
+    }
     return 0;
 }
 
@@ -208,6 +218,9 @@ int equal_string (void *s1, void *s2)
 int equal_hashable(Hashable *h1, Hashable *h2)
 {
     // FILL THIS IN!
+    if(h1==h2){
+      return 1;
+    }
     return 0;
 }
 
@@ -296,7 +309,16 @@ Node *prepend(Hashable *key, Value *value, Node *rest)
 /* Looks up a key and returns the corresponding value, or NULL */
 Value *list_lookup(Node *list, Hashable *key)
 {
+    Node *current= list;
     // FILL THIS IN!
+    while(current!=NULL){
+      if(current->key!=key){
+        current=current->next;
+      }
+      else{
+        return current->value;
+      }
+    }
     return NULL;
 }
 
@@ -342,6 +364,19 @@ void print_map(Map *map)
 void map_add(Map *map, Hashable *key, Value *value)
 {
     // FILL THIS IN!
+    int bleh = hash_hashable(key);
+    Node * current=map->lists[bleh];
+    Node * parent;
+    if(map->lists[bleh]==NULL){
+      map->lists[bleh]=make_node(key,value,NULL);
+    }
+    else{
+      while(current!=NULL){
+        parent=current;
+        current=current->next;
+      }
+      parent->next=make_node(key,value,NULL);
+    }
 }
 
 
@@ -349,7 +384,8 @@ void map_add(Map *map, Hashable *key, Value *value)
 Value *map_lookup(Map *map, Hashable *key)
 {
     // FILL THIS IN!
-    return NULL;
+    int bleh = hash_hashable(key);
+    return list_lookup(map->lists[bleh],key);
 }
 
 
