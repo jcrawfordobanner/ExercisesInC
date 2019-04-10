@@ -243,10 +243,10 @@ Hashable *make_hashable_int (int x)
 
 /* Makes a Hashable int.
 *
-* Stores a reference to the string (not a copy).
 *
 * s: string to store
 *
+* Stores a reference to the string (not a copy).
 * returns: Hashable
 */
 Hashable *make_hashable_string (char *s)
@@ -365,18 +365,8 @@ void map_add(Map *map, Hashable *key, Value *value)
 {
     // FILL THIS IN!
     int bleh = hash_hashable(key);
-    Node * current=map->lists[bleh];
-    Node * parent;
-    if(map->lists[bleh]==NULL){
-      map->lists[bleh]=make_node(key,value,NULL);
-    }
-    else{
-      while(current!=NULL){
-        parent=current;
-        current=current->next;
-      }
-      parent->next=make_node(key,value,NULL);
-    }
+    Node ** current=map->lists;
+    current[bleh]=make_node(key,value,current[bleh]);
 }
 
 

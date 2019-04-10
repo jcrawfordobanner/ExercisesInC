@@ -31,6 +31,11 @@ Matrix *make_matrix(int num_rows, int num_cols) {
 */
 void free_matrix(Matrix *matrix) {
     // TODO: Fill this in.
+    for(int i = 0; i <matrix->num_rows; i++){
+      free(matrix->rows[i]);
+    }
+    free(matrix->rows);
+    free(matrix);
 }
 
 /* Print a row of a matrix.
@@ -57,21 +62,38 @@ of row i is 0.
 */
 void reduce_matrix_rows(Matrix *matrix, int i, int j) {
     // TODO: Fill this in.
+    double *rowI = matrix->rows[i];
+    double *rowJ = matrix->rows[j];
+    double kaw = rowI[0]/rowJ[0];
+    int l = 0;
+    while(l<=matrix->num_cols){
+      rowI[l]=rowI[l]-(rowJ[l]*kaw);
+      l++;
+    }
+}
+
+
+int comp(const void *bleh, const void * blah){
+  double fuck =(*(double**)bleh)[0]-(*(double**)blah)[0] ;
+   return ((int)fuck);
+}
+
+Matrix * sort_matrix_rows(Matrix *matrix){
+  qsort(matrix->rows,matrix->num_rows,sizeof(double*),comp);
+  print_matrix(matrix);
+  return matrix;
 }
 
 int main () {
     Matrix *matrix = make_matrix(3, 4);
     for (int i=0; i<matrix->num_rows; i++) {
         for (int j=0; j<matrix->num_cols; j++) {
-            matrix->rows[i][j] = i + j + 1;
+            matrix->rows[i][j] = rand() % 40;
         }
     }
 
     print_matrix(matrix);
-    printf("reducing...\n");
-    reduce_matrix_rows(matrix, 1, 0);
-    reduce_matrix_rows(matrix, 2, 0);
-    print_matrix(matrix);
+    matrix = sort_matrix_rows(matrix);
 
     free_matrix(matrix);
 }

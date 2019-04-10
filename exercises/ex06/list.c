@@ -107,6 +107,20 @@ int remove_by_value(Node **list, int val) {
     return 1;
 }
 
+int swap(Node **list){
+  Node * head = *list;
+  Node * temp;
+  if(head -> next == NULL){
+    return -1;
+  }
+  else{
+    temp=head->next;
+    head->next=temp->next;
+    temp->next = head;
+    *list=temp;
+    return 1;
+  }
+}
 
 /* Reverses the elements of the list.
 *
@@ -138,6 +152,9 @@ int main() {
     Node **list = &head;
     print_list(list);
 
+    int poop = swap(list);
+    print_list(list);
+
     int retval = pop(list);
     print_list(list);
 
@@ -152,4 +169,9 @@ int main() {
 
     reverse(list);
     print_list(list);
+
+    pop(list);
+    pop(list);
+    print_list(list);
+    printf("%d\n",swap(list));
 }
