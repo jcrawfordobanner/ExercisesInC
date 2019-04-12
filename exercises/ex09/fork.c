@@ -19,6 +19,11 @@ License: MIT License https://opensource.org/licenses/MIT
 // error information
 extern int errno;
 
+const int vol = 5;
+
+int blah = 4;
+
+char pop[4] = "SAD\0";
 
 // get_seconds returns the number of seconds since the
 // beginning of the day, with microsecond precision
@@ -33,6 +38,9 @@ double get_seconds() {
 void child_code(int i)
 {
     sleep(i);
+    printf("Constant Vol %d\n",vol); //Child prints a global variable from the main process showing it shares globals
+    blah++;
+    printf("Global Sad %d\n",blah); //child process prints a constant variable showing it shares statics
     printf("Hello from child %d.\n", i);
 }
 
@@ -57,6 +65,8 @@ int main(int argc, char *argv[])
     // get the start time
     start = get_seconds();
 
+    int sad = 5;
+
     for (i=0; i<num_children; i++) {
 
         // create a child process
@@ -73,6 +83,10 @@ int main(int argc, char *argv[])
         /* see if we're the parent or the child */
         if (pid == 0) {
             child_code(i);
+            sad--; //Child process edits a local variable from the main process showing that it shares the stack
+            pop[i]='A'; //Child process edits a mutable string from the main process showing it shares the heap
+            printf("%s",pop);
+            printf("Local Sad %d\n",sad);
             exit(i);
         }
     }
