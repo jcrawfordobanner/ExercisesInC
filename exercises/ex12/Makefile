@@ -1,6 +1,10 @@
-
+all:
+	make counter; make counter_mutex; make barrier; make barrier_soln; make read_write; make read_write_soln;
 counter: counter.c
 	gcc -Wall -o counter counter.c -lpthread
+
+counter_array_mutex: counter_array_mutex.c
+	gcc -Wall mutex.o mutex.h counter_array_mutex.c -o counter_array_mutex -lpthread
 
 counter_mutex: counter_mutex.c
 	gcc -Wall -o counter_mutex counter_mutex.c -lpthread
