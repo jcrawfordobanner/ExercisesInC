@@ -46,6 +46,12 @@ void print_list(Node **list) {
     printf("]\n");
 }
 
+void freeNode(Node *node){
+  if(node->next!=NULL){
+    freeNode(node->next);
+  }
+  free(node);
+}
 
 /* Removes and returns the first element of a list.
 *
@@ -207,7 +213,8 @@ int main() {
     print_list(&empty);
 
     Node *something = make_something();
-    free(something);
-
+    freeNode(something);
+    freeNode(empty);
+    freeNode(test_list);
     return 0;
 }

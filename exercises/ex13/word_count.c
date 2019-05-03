@@ -14,13 +14,18 @@ Note: this version leaks memory.
 #include <stdlib.h>
 #include <glib.h>
 #include <glib/gstdio.h>
-
+#include <string.h>
 /* Represents a word-frequency pair. */
 typedef struct {
     gint freq;
     gchar *word;
 } Pair;
 
+
+
+void freePair(Pair* pair){
+  free(pair);
+}
 /* Compares two key-value pairs by frequency. */
 gint compare_pair(gpointer v1, gpointer v2, gpointer user_data)
 {
@@ -34,6 +39,7 @@ void pair_printor(gpointer value, gpointer user_data)
 {
     Pair *pair = (Pair *) value;
     printf("%d\t %s\n", pair->freq, pair->word);
+    freePair(pair);
 }
 
 
@@ -62,14 +68,20 @@ void accumulator(gpointer key, gpointer value, gpointer user_data)
 void incr(GHashTable* hash, gchar *key)
 {
     gint *val = (gint *) g_hash_table_lookup(hash, key);
-
     if (val == NULL) {
+        gchar* kay = g_strdup(key);
         gint *val1 = g_new(gint, 1);
         *val1 = 1;
-        g_hash_table_insert(hash, key, val1);
+        g_hash_table_insert(hash, kay, val1);
+        //g_free(kay);
     } else {
         *val += 1;
     }
+}
+
+void free_data (gpointer data)
+{
+  g_free (data);
 }
 
 int main(int argc, char** argv)
@@ -93,17 +105,17 @@ int main(int argc, char** argv)
     (one-L) NUL terminated strings */
     gchar **array;
     gchar line[128];
-    GHashTable* hash = g_hash_table_new(g_str_hash, g_str_equal);
+    GHashTable* hash = g_hash_table_new_full(g_str_hash, g_str_equal,free_data,free_data);
 
     // read lines from the file and build the hash table
     while (1) {
         gchar *res = fgets(line, sizeof(line), fp);
         if (res == NULL) break;
-
         array = g_strsplit(line, " ", 0);
         for (int i=0; array[i] != NULL; i++) {
             incr(hash, array[i]);
         }
+        g_strfreev(array);
     }
     fclose(fp);
 
@@ -111,7 +123,7 @@ int main(int argc, char** argv)
     // g_hash_table_foreach(hash, (GHFunc) kv_printor, "Word %s freq %d\n");
 
     // iterate the hash table and build the sequence
-    GSequence *seq = g_sequence_new(NULL);
+    GSequence *seq = g_sequence_new(free_data);
     g_hash_table_foreach(hash, (GHFunc) accumulator, (gpointer) seq);
 
     // iterate the sequence and print the pairs
@@ -120,6 +132,8 @@ int main(int argc, char** argv)
     // try (unsuccessfully) to free everything
     g_hash_table_destroy(hash);
     g_sequence_free(seq);
+
+
 
     return 0;
 }
